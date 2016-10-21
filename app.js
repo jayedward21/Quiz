@@ -1,15 +1,39 @@
-var quiz = {
-    question: [ 'When did World War 2 start?', 'What is the zone called between North Korea and South Korea', 'How many U.S. Soldiers died in the Vietnam War?', 'When was the United States Army created?', 'About how many U.S. soldiers have died in all wars combine'],
-    answera: [ '1941', 'The Safe Zone', '58,220', '3 June 1784', '700,000'],
-    answerb: [ '1945', ' Korean Demilitarized Zone', '97,600', '4 July 1785', '1.9 Million'],
-    answerc: [ '1943', 'Military Free Zone', '132,300', '24 August 1748', '1.1 Million'],
-    answerd: [ '1939', 'Korean Zone of Separation', '23,560', '17 January 1759', '900,000'],
-    correct: [ "d", "b", "a", "b", "c"],
+var quiz = [
+	{
+    	question: "When did World War Two start?",
+    	answer: [ "1941", "1945", "1943", "1939"],
+    	correct: 3,
+    	result: "World War II was a global war that lasted from 1939 to 1945, although related conflicts began earlier, it involved the vast majority of the world's nations"
+	},
+    {
+    	question: "What is the zone called between North Korea and South Korea?", 
+   		answer: [ "The Safe Zone", "Korean Demilitarized Zone", "Military Free Zone", "Korean Zone of Separation"], 
+    	correct: 1,
+    	result: "The Korean Demilitarized Zone is a strip of land running across the Korean Peninsula. It was established at the end of the Korean War to serve as a buffer zone between North Korea and South Korea"
+	},
+	{
+		question: "How many U.S. Soldiers died in the Vietnam War?",
+		answer: [ "58,220", "97,600", "132,300", "23,560" ],
+		correct: 0,
+		result: "The Vietnam War, estimates of the number of Vietnamese soldiers and civilians killed vary from 800,000 to 3.1 million. Some 200,000 to 300,000 Cambodians, 20,000 to 200,000 Laotians, and 58,220 U.S. service members also died in the conflict, with a further 1,626 missing in action."
+	},
+	{
+		question: "When was the United States Army created?",
+		answer: [ "3 June 1784", "4 July 1785", "24 August 1748", "17 January 1759"],
+		correct: 0,
+		result: "After the Revolutionary War, the Congress of the Confederation created the United States Army on 3 June 1784, to replace the disbanded Continental Army. The United States Army considers itself descended from the Continental Army, and dates its institutional inception from the origin of that armed force in 1775."
+	},
+	{
+		question: "About how many U.S. soldiers have died in all wars combine",
+		answer: [ "700,000", "1.9 Million" , "1.2 Million", "900,000"],
+		correct: 2,
+		result: "In all the American wars there have been 651,008 Battle Deaths; and about 1.2million deaths during service in war time.About 42 million people have served in the military during wartime. About 1/50th of the people serving during a time of war have died."
+	}
 //    result: ['explanation1', 'explanation2', 'explanation3', 'explanation4', 'explanation5']
-}
+];
 var i = 0;
 var selected;
-var length = 4;
+var length = quiz.length;
 var count = 0;
 var ifcorrect;
 
@@ -36,12 +60,12 @@ $(document).ready(function(){
 	$('body').on("click","#SubmitButton", function() {
 		$(".container2").remove();
 		selected = $('input:radio[id=selected]:checked').val();
-		if (selected == (quiz.correct[i]))
+		if (selected == (quiz[i].correct))
 		{
 			count++;
 			ifcorrect = "Correct!";
 			Results(ifcorrect, quiz, i);
-			if (i == length)
+			if (i+1 == length)
 			{
 				End(count, i);
 				return false;
@@ -50,7 +74,7 @@ $(document).ready(function(){
 		else {
 			ifcorrect = "Incorrect!";
 			Results(ifcorrect, quiz, i);
-			if (i == length)
+			if (i+1 == length)
 			{		
 				End(count, i);
 				return false;
@@ -59,31 +83,22 @@ $(document).ready(function(){
 		i++;
 		return false;
 });
-$('body').on("click","#SkipButton", function() {
-	$(".container2").remove();
-	temp[m] = i;
-	m++;
-	ifcorrect = "Skipped!";
-	Results(ifcorrect, quiz, 2);
-	if (i == length)
-			{
-				End(count, i);
-				return false;
-			}
-	i++;
-	return false;
-});
 function Questions(quiz, i) {
-	$("body").append('<div class="container3"><p>' + quiz.question[i] + '<p><ul><li><input type="radio" id="selected" value="a"/></p> A. ' + quiz.answera[i] + '</li><br><li><input type="radio" id="selected" value="b"/> B. ' + quiz.answerb[i] + '</li><br><li><input type="radio" id="selected" value="c"/> C. ' + quiz.answerc[i] + '</li><br><li><input type="radio" id="selected" value="d"/> D. ' + quiz.answerd[i] + '</li><form><input type="submit" id="SubmitButton" class="submit" name="Submit" value="Submit"/></form></div>');
+	$("body").append('<div class="container3"><p>' + quiz[i].question + '</p><ul>');
+	var answers = quiz[i].answer.length;
+	for (var j = 0; j < answers; j++) {
+            $(".container3").append('<li><input type="radio" id="selected" value=' + j + '></p> ' + quiz[i].answer[j] + '</li>');
+        };
+	$(".container3").append('<form><input type="submit" id="SubmitButton" class="submit" name="Submit" value="Submit"/></form></div>');
 }
 function Results(ifcorrect, quiz, i) {
 	$(".container3").remove();
-	$("body").append('<div class="container2"><h1>' + ifcorrect + '</h1><a class="close" href="#">Got It!</a></div>');
+	$("body").append('<div class="container2"><h1>' + ifcorrect + '</h1><p> ' + quiz[i].result + '</p><a class="close" href="#">Got It!</a></div>');
 }
 function End() {		
-		$("body").append('<div class="container"><h3> ' + count + ' out of ' + (i + 1) + ' Correctly answered questions </h3><form><input type="submit" id="StartButton" class="button" name="Start" value="Start"/></form></div>');
+		$("body").append('<div class="container"><h3> ' + count + ' out of ' + length + ' Correctly answered questions </h3><form><input type="submit" id="StartButton" class="button" name="Start" value="Again?"/></form></div>');
 		count = 0;
 		i = 0;
 		return false;
-}	
+}
 });
